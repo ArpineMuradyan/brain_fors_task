@@ -15,8 +15,9 @@ class UserController extends Controller
     public function index()
     {
         $users = User::all();
-
-        return view('users',compact('users'));
+        $now = new \DateTime();
+//        $now = $now->format( 'Y-m-d' );
+        return view('users',compact('users', 'now'));
     }
 
     /**

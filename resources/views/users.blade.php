@@ -24,7 +24,6 @@
     </head>
     <body class="antialiased">
         <div class="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center py-4 sm:pt-0">
-
             <div class="max-w-6xl mx-auto sm:px-6 lg:px-8 w-100 mt-20">
 
                 <table class="table table-bordered table-striped">
@@ -42,12 +41,14 @@
                             <td>{{$user->name}}</td>
                             <td>{{$user->email}}</td>
                             <td>{{$user->birthday}}</td>
-                            <td>{{Carbon::parse($user->birthday)->diff(Carbon::now())->y}}</td>
                             <td>
-                                @if(Carbon::now()->gt(Carbon::now()->parse($user->birthday)->year(now()->format('Y'))->format('Y-m-d')))
-                                    {{Carbon::now()->diffInDays(Carbon::parse($user->birthday)->year(now()->addYear()->format('Y'))->format('Y-m-d'))}}
+                                {{$now->diff(new DateTime($user->birthday))->format('%y')}}
+                            </td>
+                            <td>
+                                @if($now->format('Y-m-d') > (new DateTime($user->birthday))->setDate($now->format('Y'), (new DateTime($user->birthday))->format('m'), (new DateTime($user->birthday))->format('d'))->format('Y-m-d'))
+                                    {{$now->diff(((new DateTime($user->birthday))->setDate((new DateTime())->modify('+1 years')->format('Y'), (new DateTime($user->birthday))->format('m'), (new DateTime($user->birthday))->format('d'))))->format('%m')}} months and {{$now->diff((new DateTime($user->birthday))->setDate((new DateTime())->modify('+1 years')->format('Y'), (new DateTime($user->birthday))->format('m'), (new DateTime($user->birthday))->format('d')))->format('%d')}} days
                                 @else
-                                    {{Carbon::parse(Carbon::now()->parse($user->birthday)->year(now()->format('Y'))->format('Y-m-d'))->diffInDays(Carbon::now())}}
+                                    {{((new DateTime($user->birthday))->setDate((new DateTime())->format('Y'), (new DateTime($user->birthday))->format('m'), (new DateTime($user->birthday))->format('d')))->diff($now)->format('%m')}} months and {{(new DateTime($user->birthday))->setDate((new DateTime())->format('Y'), (new DateTime($user->birthday))->format('m'), (new DateTime($user->birthday))->format('d'))->diff($now)->format('%d')}} days
                                 @endif
                             </td>
                         </tr>
